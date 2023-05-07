@@ -5,6 +5,7 @@ using UnityEngine;
 public class ScreenToWorld : MonoBehaviour
 {
     public GameObject sphere;
+    public LineRenderer mouseLine;
     LineRenderer line;
     void Start()
     {
@@ -15,11 +16,12 @@ public class ScreenToWorld : MonoBehaviour
     void Update()
     {
         SelectStar();
+        GetMouseLine();
     }
 
     void SelectStar()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonUp(0))
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hits;
@@ -35,5 +37,40 @@ public class ScreenToWorld : MonoBehaviour
         }
     }
 
-    
+    void GetMouseLine()
+    {
+        if (Input.GetMouseButton(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hits;
+            if (Physics.Raycast(ray, out hits))
+            {
+                if (hits.transform.name.Contains("Star"))
+                {
+                    mouseLine.SetPosition(0, hits.transform.position);
+                }
+                else 
+                {
+                    mouseLine.SetPosition(1, hits.point);
+                }
+
+            }
+        }
+        if (Input.GetMouseButtonUp(0))
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hits;
+            if (Physics.Raycast(ray, out hits))
+            {
+                if (hits.transform.name.Contains("Star"))
+                {
+                    mouseLine.SetPosition(0, hits.transform.position);
+                }
+                else
+                {
+                    mouseLine.SetPosition(1, mouseLine.GetPosition(0));
+                }
+            }
+        }
+    }
 }
